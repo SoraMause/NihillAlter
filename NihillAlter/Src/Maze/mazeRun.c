@@ -16,7 +16,7 @@
 #include "led.h"
 #include "logger.h"
 
-#define SEARCH_MAX_TIME 150000
+#define SEARCH_MAX_TIME 300000
 
 void adachiSearchRun( int8_t gx, int8_t gy, t_normal_param *translation, t_normal_param *rotation, t_walldata *wall, t_walldata *bit, t_position *pos, uint8_t maze_scale )
 {
@@ -75,16 +75,19 @@ void adachiSearchRun( int8_t gx, int8_t gy, t_normal_param *translation, t_norma
     }
 
     // 探索時間が2分30秒以上たっていた場合打ち切り。
-    if( cnt_act > SEARCH_MAX_TIME ) break;
+    if( cnt_act > SEARCH_MAX_TIME && gx == 0 && gy == 0 ) break;
   }
     
   addWall( pos, wall );
   addWall( pos, bit ); 
   straightHalfBlockStop( translation->accel, translation->velocity );
   waitMotion( 300 );
-  pivoTurn180( rotation->accel, rotation->velocity );
-  adjBack();
-  mypos.direction = (mypos.direction + 2) % 4;
+  if ( sen_front.is_wall == 1 ){
+    pivoTurn180( rotation->accel, rotation->velocity );
+    adjBack();
+    mypos.direction = (mypos.direction + 2) % 4;
+  } 
+  
   setControlFlag( 0 );
   buzzerSetMonophonic( C_H_SCALE, 100 );
   waitMotion( 150 );
@@ -137,18 +140,22 @@ void adachiSearchRunKnown( int8_t gx, int8_t gy, t_normal_param *translation, t_
     }
 
     // 探索時間が2分30秒以上たっていた場合打ち切り。
-    if( cnt_act > SEARCH_MAX_TIME ) break;
+    if( cnt_act > SEARCH_MAX_TIME && gx == 0 && gy == 0 ) break;
 
-    if ( checkAllSearch() == 1 ) break;
+    if ( checkAllSearch() == 1 && gx == 0 && gy == 0 ) break;
 
   }
     
   addWall( pos, wall );
   addWall( pos, bit ); 
   straightHalfBlockStop( translation->accel, translation->velocity );
-  pivoTurn180( rotation->accel, rotation->velocity );
-  adjBack();
-  mypos.direction = (mypos.direction + 2) % 4;
+  if ( sen_front.is_wall == 1 ){
+    pivoTurn180( rotation->accel, rotation->velocity );
+    adjBack();
+    mypos.direction = (mypos.direction + 2) % 4;
+  } else {
+    adjBack();
+  }
   setControlFlag( 0 );
   buzzerSetMonophonic( C_H_SCALE, 100 );
   waitMotion( 150 );

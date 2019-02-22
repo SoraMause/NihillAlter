@@ -15,6 +15,6 @@
 #define GEAR_RATION               4.33f // 39 / 9 = 4.333
 
 // タイヤが一回転するまでのエンコーダの値
-#define MACHINE_ENC_CNT_PER_ROT   4096 
+#define MACHINE_ENC_CNT_PER_ROT   4096
 
 #endif /* __CONFIG_H */

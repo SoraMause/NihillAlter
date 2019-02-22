@@ -142,9 +142,43 @@ void waitMotion( volatile int32_t wait_time )
     // 動作をしない
 
   }
+  
   rotation_deviation.cumulative = 0.0f;
   wait_flag = 0;
 
+}
+
+void waitSearchStraight( void )
+{
+  while( translation_trape_param.run_flag == 1 ){
+    // 動作終了までメインは動作を待機状態にする
+    if ( sen_front.now > 135 ) break;
+  }
+
+  if ( sen_front.is_wall == 1 ){
+    while( sen_front.now < 125 );
+  }
+
+  // reset ideal data
+  translation_ideal.accel = 0.0f;
+  translation_ideal.distance = 0.0f;
+  translation_ideal.velocity = translation_trape_param.end_velocity;
+  
+  // reset trape back turn flag
+  translation_trape_param.back_rightturn_flag = 0;
+  
+  // reset pid parameter 
+  run_left_deviation.difference = 0.0f;
+  run_left_deviation.cumulative = 0.0f;
+  run_right_deviation.difference = 0.0f;
+  run_right_deviation.cumulative = 0.0f;
+
+  sidewall_control_flag = 0;  // 壁制御は切る
+  frontwall_control_flag = 0;
+  dirwall_control_flag = 0;
+
+  rotation_trape_param.back_rightturn_flag = 0;
+  
 }
 
 void waitSlaromOut( void )
@@ -155,7 +189,7 @@ void waitSlaromOut( void )
 
 
   if ( sen_front.is_wall == 1 ){
-    while( sen_front.now < 120 );
+    while( sen_front.now < 125 );
   }
 
   // reset ideal data

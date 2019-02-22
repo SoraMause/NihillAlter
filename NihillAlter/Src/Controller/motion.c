@@ -26,7 +26,7 @@ void adjFront( float accel, float run_vel )
   wall_out_flag = 1;          // 壁切れを読むことを許可
   sidewall_control_flag = 1;  // 壁制御有効
   setStraight( ADJ_FRONT_DISTANCE, accel, run_vel, 0.0f, run_vel );
-  waitStraight();
+  waitSearchStraight();
 }
 
 void adjBack( void )
@@ -57,7 +57,7 @@ void straightHalfBlockStart( float accel , float run_vel )
   sidewall_control_flag = 1;    // 壁制御有効
   frontwall_control_flag = 1;
   setStraight( HALF_BLOCK_DISTANCE, accel, run_vel, 0.0f, run_vel );
-  waitStraight(); 
+  waitSearchStraight();
 }
 
 void pivoTurnLeft( float accel, float run_vel )

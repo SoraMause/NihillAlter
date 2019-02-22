@@ -24,8 +24,8 @@
 #include "mazeRun.h"
 
 // ゴール座標の設定
-static uint8_t goal_x = 1;
-static uint8_t goal_y = 0;
+static uint8_t goal_x = 7;
+static uint8_t goal_y = 7;
 static uint8_t maze_goal_size = 1;
 
 void modeSelect( int8_t mode )
@@ -99,7 +99,7 @@ void mode_init( void )
 	rotation_trape_param.back_rightturn_flag = 0;
 	rotation_deviation.cumulative = 0.0;
   // to do search param と fast paramで分けれるようにする
-  setSlaromOffset( &slarom300, 7.5f, 8.5f, 7.5f, 8.5f, 9000.0f, 720.0f );
+  setSlaromOffset( &slarom300, 8.0f, 8.5f, 8.0f, 8.5f, 9000.0f, 720.0f );
 
   setPIDGain( &translation_gain, 0.8f, 16.0f, 0.0f );  
   setPIDGain( &rotation_gain, 0.9f, 50.0f, 0.0f ); 
@@ -203,20 +203,36 @@ void mode1( void )
 void mode2( void )
 {
   int8_t speed_count = 0;
+  int8_t _straight = 0;
 
   loadWallData( &wall_data );
   positionReset( &mypos );
 
   certainLedOut( 0x0c );
-  waitMotion( 100 );
+  waitMotion( 300 );
   certainLedOut( LED_OFF );
+
+  mode_distance = 0.0f;
+  while( getPushsw() == 0 ){
+    if ( mode_distance > 50.0f ){
+      _straight = 1;
+      mode_distance = 0.0f;
+      certainLedOut( 0x0f );
+    }
+
+    if ( mode_distance < -50.0f && _straight == 1 ){
+      _straight = 0;
+      mode_distance = 0.0f;
+      certainLedOut( 0x00 );
+    }
+  }
 
   speed_count = PARAM_400;
   setNormalRunParam( &run_param, 8000.0f, 400.0f );       // 加速度、速度指定
   setNormalRunParam( &rotation_param, 6300.0f, 450.0f );  // 角加速度、角速度指定
-  setPIDGain( &translation_gain, 1.5f, 20.0f, 0.0f );    
+  setPIDGain( &translation_gain, 1.5f, 20.0f, 0.0f );   
 
-  if ( agentDijkstraRoute( goal_x, goal_y, &wall_data, MAZE_HALF_MAX_SIZE, 0, speed_count, 0 ) == 0 ){
+  if ( agentDijkstraRoute( goal_x, goal_y, &wall_data, MAZE_HALF_MAX_SIZE, _straight, speed_count, 0 ) == 0 ){
     return;
   }
 
