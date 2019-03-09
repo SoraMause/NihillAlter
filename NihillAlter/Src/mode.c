@@ -101,8 +101,8 @@ void mode_init( void )
   // to do search param と fast paramで分けれるようにする
   setSlaromOffset( &slarom300, 8.0f, 8.5f, 8.0f, 8.5f, 9000.0f, 720.0f );
 
-  setPIDGain( &translation_gain, 0.8f, 16.0f, 0.0f );  
-  setPIDGain( &rotation_gain, 0.9f, 50.0f, 0.0f ); 
+  setPIDGain( &translation_gain, 0.8f, 30.0f, 0.0f );  
+  setPIDGain( &rotation_gain, 0.9f, 60.0f, 0.0f ); 
   setPIDGain( &sensor_gain, 0.2f, 0.0f, 0.0f );
 
   // sensor 値設定
@@ -127,7 +127,7 @@ void startAction( void )
   buzzerSetMonophonic( A_SCALE, 200 );
   HAL_Delay( 300 );
   adcStart();
-  while( sen_front.now < 110 );
+  while( sen_front.now < 200 );
   buzzerSetMonophonic( C_H_SCALE, 300 );
   adcEnd();
   waitMotion( 500 );
@@ -204,6 +204,7 @@ void mode2( void )
 {
   int8_t speed_count = 0;
   int8_t _straight = 0;
+  int8_t counter = 0;
 
   loadWallData( &wall_data );
   positionReset( &mypos );
@@ -213,24 +214,48 @@ void mode2( void )
   certainLedOut( LED_OFF );
 
   mode_distance = 0.0f;
+
   while( getPushsw() == 0 ){
-    if ( mode_distance > 50.0f ){
-      _straight = 1;
+    printf( "mode_counter = %d, mode_distance = %f\r", counter, mode_distance );
+
+    if ( mode_distance > 30.0f ){
       mode_distance = 0.0f;
-      certainLedOut( 0x0f );
+      counter++;
+      if( counter > 4 ) counter = 0;
+      buzzermodeSelect( counter );
+      waitMotion( 200 );
+      certainLedOut( counter );
     }
 
-    if ( mode_distance < -50.0f && _straight == 1 ){
-      _straight = 0;
+    if ( mode_distance < -30.0f ){
       mode_distance = 0.0f;
-      certainLedOut( 0x00 );
+      counter--;
+      if( counter < 0 ) counter = 4;
+      buzzermodeSelect( counter );      
+      waitMotion( 200 );
+      certainLedOut( counter );
     }
   }
 
-  speed_count = PARAM_400;
-  setNormalRunParam( &run_param, 8000.0f, 400.0f );       // 加速度、速度指定
-  setNormalRunParam( &rotation_param, 6300.0f, 450.0f );  // 角加速度、角速度指定
-  setPIDGain( &translation_gain, 1.5f, 20.0f, 0.0f );   
+  if ( counter % 2 == 0 ){
+      _straight = 0;
+  } else {
+      _straight = 1;
+  }
+  
+
+  if ( mode_counter < 2 ){
+    speed_count = PARAM_400;
+    setNormalRunParam( &run_param, 8000.0f, 400.0f );       // 加速度、速度指定
+    setNormalRunParam( &rotation_param, 6300.0f, 450.0f );  // 角加速度、角速度指定
+    setPIDGain( &translation_gain, 1.4f, 40.0f, 0.0f );   
+  } else {
+    speed_count = PARAM_500;
+    setNormalRunParam( &run_param, 10000.0f, 500.0f );       // 加速度、速度指定
+    setNormalRunParam( &rotation_param, 6300.0f, 450.0f );  // 角加速度、角速度指定
+    setPIDGain( &translation_gain, 1.6f, 45.0f, 0.0f );   
+  }
+  
 
   if ( agentDijkstraRoute( goal_x, goal_y, &wall_data, MAZE_HALF_MAX_SIZE, _straight, speed_count, 0 ) == 0 ){
     return;
@@ -238,7 +263,12 @@ void mode2( void )
 
   startAction();
 
-  adachiFastRunDiagonal400( &run_param, &rotation_param );
+  if ( speed_count < 2 ){
+    adachiFastRunDiagonal400( &run_param, &rotation_param );
+  } else {
+    adachiFastRunDiagonal500( &run_param, &rotation_param );
+  }
+  
   
   // debug 
   waitMotion( 2000 );
@@ -261,7 +291,7 @@ void mode3( void )
   adcEnd();
   if ( wall_data.save == 1 ){
     agentSetShortRoute( goal_x, goal_y, &wall_data, MAZE_HALF_MAX_SIZE, 1, 0 );
-    agentDijkstraRoute( goal_x, goal_y, &wall_data, MAZE_HALF_MAX_SIZE, 0, PARAM_1000, 1 );
+    agentDijkstraRoute( goal_x, goal_y, &wall_data, MAZE_HALF_MAX_SIZE, 0, PARAM_400, 1 );
   }
   
 }
@@ -368,9 +398,15 @@ void mode7( void )
   HAL_Delay(300); 
   startAction();
   // turn param
-
-  setStraight( 180.0f, 4000.0f, 300.0f, 0.0f, 0.0f );
+  setNormalRunParam( &rotation_param, 6300.0f, 450.0f );  // 角加速度、角速度指定
+  setPIDGain( &translation_gain, 1.6f, 45.0f, 0.0f );  
+  
+  setStraight( 105.0f, 10000.0f, 500.0f, 0.0f, 500.0f );
   waitStraight();
+
+  setStraight( 90.0f, 10000.0f, 500.0f, 500.0f, 0.0f );
+  waitStraight();
+
 
   setLogFlag( 0 );
   waitMotion( 300 );

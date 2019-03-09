@@ -5,8 +5,8 @@
 #include "variable.h"
 
 // macro 定義( 最短走行ターン速度 )
-#define PARAM_1000 0 // do not use fun
-#define PARAM_400 1 // use fun ( duty 20 % )
+#define PARAM_500 0
+#define PARAM_400 1 
 
 // macro 定義( モーションの名前 )
 #define END                 0
@@ -75,7 +75,7 @@ int8_t agentGetShortRoute( uint8_t gx, uint8_t gy, t_walldata *wall, uint8_t maz
 void agentSetShortRoute( uint8_t gx, uint8_t gy, t_walldata *wall, uint8_t maze_scale, uint8_t outflag, uint8_t boost );
 int8_t agentDijkstraRoute( int16_t gx, int16_t gy, t_walldata *wall, uint8_t maze_scale, int8_t _straight, int8_t speed_mode, int8_t out_flag );
 
-void setFastPathParameter1000( int8_t motion_buff[256], int8_t motion_data[256], uint8_t *cnt_motion, int8_t out_flag );
+void setFastPathParameter500( int8_t motion_buff[256], int8_t motion_data[256], uint8_t *cnt_motion, int8_t out_flag );
 void setFastPathParameter400( int8_t motion_buff[256], int8_t motion_data[256], uint8_t *cnt_motion, int8_t out_flag );
 #endif /* __AGENT_H */
 

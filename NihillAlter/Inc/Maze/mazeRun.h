@@ -10,7 +10,7 @@ void adachiSearchRunKnown( int8_t gx, int8_t gy, t_normal_param *translation, t_
 
 void adachiFastRun( t_normal_param *translation, t_normal_param *rotation );
 
-void adachiFastRunDiagonal1000( t_normal_param *translation, t_normal_param *rotation );
 void adachiFastRunDiagonal400( t_normal_param *translation, t_normal_param *rotation );
+void adachiFastRunDiagonal500( t_normal_param *translation, t_normal_param *rotation );
 
 #endif /*__MAZE_RUN_H */

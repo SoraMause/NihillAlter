@@ -82,7 +82,7 @@ void adachiSearchRun( int8_t gx, int8_t gy, t_normal_param *translation, t_norma
   addWall( pos, bit ); 
   straightHalfBlockStop( translation->accel, translation->velocity );
   waitMotion( 300 );
-  if ( sen_front.is_wall == 1 ){
+  if ( mypos.x == gx && mypos.y == gy ){
     pivoTurn180( rotation->accel, rotation->velocity );
     adjBack();
     mypos.direction = (mypos.direction + 2) % 4;
@@ -149,13 +149,11 @@ void adachiSearchRunKnown( int8_t gx, int8_t gy, t_normal_param *translation, t_
   addWall( pos, wall );
   addWall( pos, bit ); 
   straightHalfBlockStop( translation->accel, translation->velocity );
-  if ( sen_front.is_wall == 1 ){
+  if ( mypos.x == gx && mypos.y == gy ){
     pivoTurn180( rotation->accel, rotation->velocity );
     adjBack();
     mypos.direction = (mypos.direction + 2) % 4;
-  } else {
-    adjBack();
-  }
+  } 
   setControlFlag( 0 );
   buzzerSetMonophonic( C_H_SCALE, 100 );
   waitMotion( 150 );
@@ -199,7 +197,7 @@ void adachiFastRun( t_normal_param *translation, t_normal_param *rotation )
   waitMotion( 100 );
 }
 
-void adachiFastRunDiagonal1000( t_normal_param *translation, t_normal_param *rotation )
+void adachiFastRunDiagonal400( t_normal_param *translation, t_normal_param *rotation )
 {
   
   setControlFlag( 0 );
@@ -227,210 +225,204 @@ void adachiFastRunDiagonal1000( t_normal_param *translation, t_normal_param *rot
 
       // 中心から90度
       case CENRTER_SLAROM_LEFT:
-        certainLedOut( LED_OFF );
-        sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 31.0f, translation->accel, 1000.0f, 1000.0f, 1000.0f );
-        waitStraight();
-        setRotation( 90.0f, 7200.0f, 600.0f, 1000.0f );
-        waitRotation();
-        sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 48.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
-        waitStraight();
+      sidewall_control_flag = 1;    // 壁制御有効
+      while( sen_l.now > sen_l.threshold );
+      translation_ideal.distance = 8.0f;
+      setStraight( 41.0f, 8000.0f, 400.0f, 400.0f, 400.0f );
+      waitStraight();
+      setRotation( 90.0f, 10000.0f, 700.0f, 400.0f );
+      waitRotation();
+      sidewall_control_flag = 1;    // 壁制御有効
+      setStraight( 46.0f, 0.0f, 400.0f, 400.0f, 400.0f );
+      waitStraight();
         break;
 
       case CENRTER_SLAROM_RIGHT:
         sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 31.0f, translation->accel, 1000.0f, 1000.0f, 1000.0f );
+        while( sen_r.now > sen_r.threshold );
+        translation_ideal.distance = 8.4f;
+        setStraight( 41.0f, 8000.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
-        setRotation( -90.0f, 7200.0f, 600.0f, 1000.0f );
+        setRotation( -90.0f, 10000.0f, 700.0f, 400.0f );
         waitRotation();
         sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 48.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 46.0f, 0.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
         break;
 
       // 中心から180度
       case SLAROM_LEFT_180:
         sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 30.0f, translation->accel, 1000.0f, 1000.0f, 1000.0f );
+        while( sen_l.now > sen_l.threshold );
+        translation_ideal.distance = 8.0f;
+        setStraight( 30.0f, 8000.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
-        setRotation( 180.0f, 8000.0f, 664.0f, 1000.0f );
+        setRotation( 180.0f, 12000.0f, 510.0f, 400.0f );
         waitRotation();
         sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 48.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 33.0f, 0.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
         break;
 
       case SLAROM_RIGHT_180:
-        certainLedOut( LED_OFF );
         sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 30.0f, translation->accel, 1000.0f, 1000.0f, 1000.0f );
+        while( sen_r.now > sen_r.threshold );
+        translation_ideal.distance = 8.4f;
+        setStraight( 30.0f, 8000.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
-        setRotation( -180.0f, 8000.0f, 664.0f, 1000.0f );
+        setRotation( -180.0f, 12000.0f, 510.0f, 400.0f );
         waitRotation();
         sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 48.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 33.0f, 0.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
         break;
 
       // 中心から45度
       case DIA_CENTER_LEFT:
-        certainLedOut( LED_OFF );
         sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 18.0f, translation->accel, 1000.0f, 1000.0f, 1000.0f );
+        while( sen_l.now > sen_l.threshold );
+        translation_ideal.distance = 8.0f;
+        setStraight( 21.0f, 8000.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
-        setRotation( 45.0f, 12000.0f, 700.0f, 1000.0f );
+        setRotation( 45.0f, 16000.0f, 700.0f, 400.0f );
         waitRotation();
         dirwall_control_flag = 1;
-        setStraight( 71.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 42.0f, 0.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
         break;
 
       case DIA_CENTER_RIGHT:
-        certainLedOut( LED_OFF );
         sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 18.0f, translation->accel, 1000.0f, 1000.0f, 1000.0f );
+        while( sen_r.now > sen_r.threshold );
+        translation_ideal.distance = 8.4f;
+        setStraight( 21.0f, 8000.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
-        setRotation( -45.0f, 12000.0f, 700.0f, 1000.0f );
+        setRotation( -45.0f, 16000.0f, 700.0f, 400.0f );
         waitRotation();
         dirwall_control_flag = 1;
-        setStraight( 71.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 42.0f, 0.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
         break;
 
       // 中心から135度
       case DIA_CENTER_LEFT_135:
-        certainLedOut( LED_OFF );
         sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 39.0f, translation->accel, 1000.0f, 1000.0f, 1000.0f );
+        while( sen_l.now > sen_l.threshold );
+        translation_ideal.distance = 8.0f;
+        setStraight( 42.0f, 8000.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
-        setRotation( 135.0f, 10000.0f, 800.0f, 1000.0f );
+        setRotation( 135.0f, 12000.0f, 700.0f, 400.0f );
         waitRotation();
         dirwall_control_flag = 1;
-        setStraight( 47.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 38.0f, 0.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
         break;
 
       case DIA_CENTER_RIGHT_135:
-        certainLedOut( LED_OFF );
         sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 39.0f, translation->accel, 1000.0f, 1000.0f, 1000.0f );
+        while( sen_r.now > sen_r.threshold );
+        translation_ideal.distance = 8.4f;
+        setStraight( 42.0f, 8000.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
-        setRotation( -135.0f, 10000.0f, 800.0f, 1000.0f );
+        setRotation( -135.0f, 12000.0f, 700.0f, 400.0f );
         waitRotation();
         dirwall_control_flag = 1;
-        setStraight( 47.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 38.0f, 0.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
         break;
 
       // 斜め90度 ( V90 )
       case DIA_LEFT_TURN:
-        certainLedOut( 0x02 );
         dirwall_control_flag = 1;
-        if ( sen_l.is_wall == 1 ){
-          while( sen_l.now > sen_l.threshold );
-          translation_ideal.distance = 11.0f;
-        } else {
-          translation_ideal.distance = 11.0f;
+        while( sen_l.now > sen_l.threshold && translation_ideal.distance < 15.0f );
+        if ( translation_ideal.distance < 15.0f ){
+          translation_ideal.distance = 2.0f;
         }
-        setStraight( 15.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        
+        setStraight( 21.0f, 0.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
-        setRotation( 90.0f, 12000.0f, 960.0f, 1000.0f );
+        setRotation( 90.0f, 14000.0f, 800.0f, 400.0f );
         waitRotation();
         dirwall_control_flag = 1;
-        setStraight( 38.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
-        waitStraight();  
+        setStraight( 27.0f, 0.0f, 400.0f, 400.0f, 400.0f );
+        waitStraight();   
         break;
 
       case DIA_RIGHT_TURN:
-        certainLedOut( 0x02 );
         dirwall_control_flag = 1;
-        if ( sen_r.is_wall == 1 ){
-          while( sen_r.now > sen_r.threshold );
-          translation_ideal.distance = 8.0f;
-        } else {
-          translation_ideal.distance = 8.0f;
+        while( sen_r.now > sen_r.threshold && translation_ideal.distance < 15.0f );
+        if ( translation_ideal.distance < 15.0f ){
+          translation_ideal.distance = 2.8f;
         }
-        setStraight( 15.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 21.0f, 0.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
-        setRotation( -90.0f, 12000.0f, 960.0f, 1000.0f );
+        setRotation( -90.0f, 14000.0f, 800.0f, 400.0f );
         waitRotation();
         dirwall_control_flag = 1;
-        setStraight( 38.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
-        waitStraight();    
+        setStraight( 27.0f, 0.0f, 400.0f, 400.0f, 400.0f );
+        waitStraight();  
         break;
 
       // 斜めから復帰
       case RETURN_DIA_LEFT:
-        certainLedOut( LED_OFF );
         dirwall_control_flag = 1;
-        if ( sen_l.is_wall == 1 ){
-          while( sen_l.now > sen_l.threshold );
-          translation_ideal.distance = 11.0f;
-        } else {
-          translation_ideal.distance = 11.0f;
+        while( sen_l.now > sen_l.threshold && translation_ideal.distance < 15.0f );
+        if ( translation_ideal.distance < 15.0f ){
+          translation_ideal.distance = 2.0f;
         }
-        setStraight( 45.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 36.0f, 8000.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
-        setRotation( 45.0f, 10000.0f, 500.0f, 1000.0f );
+        setRotation( 45.0f, 12000.0f, 700.0f, 400.0f );
         waitRotation();
         sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 27.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 21.0f, 0.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
         break;
 
       case RETURN_DIA_RIGHT:
-        certainLedOut( LED_OFF );
         dirwall_control_flag = 1;
-        if ( sen_r.is_wall == 1 ){
-          while( sen_r.now > sen_r.threshold );
-          translation_ideal.distance = 8.0f;
-        } else {
-          translation_ideal.distance = 8.0f;
+        while( sen_r.now > sen_r.threshold && translation_ideal.distance < 15.0f );
+        if ( translation_ideal.distance < 15.0f ){
+          translation_ideal.distance = 2.8f;
         }
-        setStraight( 45.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 36.0f, 8000.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
-        setRotation( -45.0f, 10000.0f, 500.0f, 1000.0f );
+        setRotation( -45.0f, 12000.0f, 700.0f, 400.0f );
         waitRotation();
         sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 27.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 21.0f, 0.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
         break;
 
       // 斜めから135度ターン復帰
       case RETURN_DIA_LEFT_135:
-        certainLedOut( LED_OFF );
         dirwall_control_flag = 1;
-        if ( sen_l.is_wall == 1 ){
-          while( sen_l.now > sen_l.threshold );
-          translation_ideal.distance = 11.0f;
-        } else {
-          translation_ideal.distance = 11.0f;
+        while( sen_l.now > sen_l.threshold && translation_ideal.distance < 15.0f );
+        if ( translation_ideal.distance < 15.0f ){
+          translation_ideal.distance = 2.8f;
         }
-        setStraight( 23.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 34.0f, 8000.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
-        setRotation( 135.0f, 10000.0f, 800.0f, 1000.0f );
+        setRotation( 135.0f, 12000.0f, 700.0f, 400.0f );
         waitRotation();
         sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 61.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 46.0f, 0.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
         break;
 
       case RETURN_DIA_RIGHT_135:
-        certainLedOut( LED_OFF );
         dirwall_control_flag = 1;
-        if ( sen_r.is_wall == 1 ){
-          while( sen_r.now > sen_r.threshold );
-          translation_ideal.distance = 8.0f;
-        } else {
-          translation_ideal.distance = 8.0f;
+        while( sen_r.now > sen_r.threshold && translation_ideal.distance < 15.0f );
+        if ( translation_ideal.distance < 15.0f ){
+          translation_ideal.distance = 2.8f;
         }
-        setStraight( 23.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        
+        setStraight( 34.0f, 8000.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
-        setRotation( -135.0f, 10000.0f, 800.0f, 1000.0f );
+        setRotation( -135.0f, 12000.0f, 700.0f, 400.0f );
         waitRotation();
         sidewall_control_flag = 1;    // 壁制御有効
-        setStraight( 61.0f, 0.0f, 1000.0f, 1000.0f, 1000.0f );
+        setStraight( 46.0f, 0.0f, 400.0f, 400.0f, 400.0f );
         waitStraight();
         break;
 
@@ -462,7 +454,139 @@ void adachiFastRunDiagonal1000( t_normal_param *translation, t_normal_param *rot
   waitMotion( 100 );
 }
 
-void adachiFastRunDiagonal400( t_normal_param *translation, t_normal_param *rotation )
+void adachiFastRunDiagonal500( t_normal_param *translation, t_normal_param *rotation )
+{
+  
+  setControlFlag( 0 );
+  setLogFlag( 0 );
+  waitMotion( 1000 );
+  setLogFlag( 1 );
+  setControlFlag( 1 );
+  
+  while( motion_queue[motion_last] != 0 ){
+    switch( motion_queue[motion_last] ){
+      case SET_STRAIGHT:
+        certainLedOut( LED_OFF );
+        sidewall_control_flag = 1;  // 壁制御有効
+        runStraight( translation->accel, fast_path[motion_last].distance, fast_path[motion_last].start_speed, 
+                    fast_path[motion_last].speed, fast_path[motion_last].end_speed );
+        break;
+
+      case SET_DIA_STRAIGHT:
+        certainLedOut( 0x01 );
+        dirwall_control_flag = 1;
+        runStraight( translation->accel, fast_path[motion_last].distance, fast_path[motion_last].start_speed, 
+                    fast_path[motion_last].speed, fast_path[motion_last].end_speed );
+        dirwall_control_flag = 0;
+        break;
+
+      // 中心から90度
+      case CENRTER_SLAROM_LEFT:
+        certainLedOut( LED_OFF );
+        slaromCenterLeft( translation->accel );
+        break;
+
+      case CENRTER_SLAROM_RIGHT:
+        certainLedOut( LED_OFF );
+        slaromCenterRight( translation->accel );
+        break;
+
+      // 中心から180度
+      case SLAROM_LEFT_180:
+        certainLedOut( LED_OFF );
+        slaromCenterLeft180( translation->accel );
+        break;
+
+      case SLAROM_RIGHT_180:
+        certainLedOut( LED_OFF );
+        slaromCenterRight180( translation->accel );
+        break;
+
+      // 中心から45度
+      case DIA_CENTER_LEFT:
+        certainLedOut( LED_OFF );
+        slaromCenterLeft45( translation->accel );
+        break;
+
+      case DIA_CENTER_RIGHT:
+        certainLedOut( LED_OFF );
+        slaromCenterRight45( translation->accel );
+        break;
+
+      // 中心から135度
+      case DIA_CENTER_LEFT_135:
+        certainLedOut( LED_OFF );
+        slaromCenterLeft135( translation->accel );
+        break;
+
+      case DIA_CENTER_RIGHT_135:
+        certainLedOut( LED_OFF );
+        slaromCenterRight135( translation->accel );
+        break;
+
+      // 斜め90度 ( V90 )
+      case DIA_LEFT_TURN:
+        certainLedOut( 0x03 );
+        slaromLeftV90();
+        break;
+
+      case DIA_RIGHT_TURN:
+        certainLedOut( 0x03 );
+        slaromRightV90();
+        break;
+
+      // 斜めから復帰
+      case RETURN_DIA_LEFT:
+        certainLedOut( LED_OFF );
+        slaromReturnDiaLeft45();
+        break;
+
+      case RETURN_DIA_RIGHT:
+        certainLedOut( LED_OFF );
+        slaromReturnDiaRight45();
+        break;
+
+      // 斜めから135度ターン復帰
+      case RETURN_DIA_LEFT_135:
+        certainLedOut( LED_OFF );
+        slaromReturnDiaLeft135();
+        break;
+
+      case RETURN_DIA_RIGHT_135:
+        certainLedOut( LED_OFF );
+        slaromReturnDiaRight135();
+        break;
+
+      case FRONTPD_DELAY:
+        // 前壁制御有効にする
+        frontwall_control_flag = 1;
+        waitMotion( 100 );
+        break;
+
+      case DELAY:
+        waitMotion( 50 );
+        break;
+
+      case SET_FRONT_PD_STRAIGHT:
+        // 前壁制御有効にする
+        frontwall_control_flag = 1;
+        runStraight( translation->accel, fast_path[motion_last].distance, fast_path[motion_last].start_speed, 
+                    fast_path[motion_last].speed, fast_path[motion_last].end_speed );        
+        break;
+
+      default:
+        break;
+    } // end switch 
+    motion_last++;
+  }
+
+  buzzerSetMonophonic( NORMAL, 100 );
+  setControlFlag( 0 );
+  setLogFlag( 0 );
+  waitMotion( 100 );
+}
+
+void adachiFastRunDiagonal600( t_normal_param *translation, t_normal_param *rotation )
 {
   
   setControlFlag( 0 );
