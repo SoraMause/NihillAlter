@@ -7,6 +7,7 @@
 // macro 定義( 最短走行ターン速度 )
 #define PARAM_500 0
 #define PARAM_400 1 
+#define PARAM_600 2
 
 // macro 定義( モーションの名前 )
 #define END                 0
@@ -77,5 +78,6 @@ int8_t agentDijkstraRoute( int16_t gx, int16_t gy, t_walldata *wall, uint8_t maz
 
 void setFastPathParameter500( int8_t motion_buff[256], int8_t motion_data[256], uint8_t *cnt_motion, int8_t out_flag );
 void setFastPathParameter400( int8_t motion_buff[256], int8_t motion_data[256], uint8_t *cnt_motion, int8_t out_flag );
+void setFastPathParameter600( int8_t motion_buff[256], int8_t motion_data[256], uint8_t *cnt_motion, int8_t out_flag );
 #endif /* __AGENT_H */
 

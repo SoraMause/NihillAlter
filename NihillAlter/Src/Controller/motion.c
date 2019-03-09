@@ -4,6 +4,8 @@
 
 #include "maze.h"
 
+#include "agent.h"
+
 void setSlaromOffset( t_slarom_parameter *slarom, float left_in, float left_out, float right_in, 
                       float right_out, float ang_accel, float max_ang_vel )
 {
@@ -117,14 +119,14 @@ void slaromCenterLeft( float accel )
 {
   sidewall_control_flag = 1;    // 壁制御有効
   while( sen_l.now > sen_l.threshold );
-  translation_ideal.distance = 7.5f;
+  translation_ideal.distance = 7.2f;
   sidewall_control_flag = 1;
-  setStraight( 29.0f, accel, 500.0f, 500.0f, 500.0f );
+  setStraight( 23.0f, accel, 600.0f, 600.0f, 600.0f );
   waitStraight();
-  setRotation( 90.0f, 10000.0f, 700.0f, 500.0f );
+  setRotation( 90.0f, 14000.0f, 700.0f, 600.0f );
   waitRotation();
-  sidewall_control_flag = 1;    // 壁制御有効
-  setStraight( 35.0f, 0.0f, 500.0f, 500.0f, 500.0f );
+  sidewall_control_flag = 1;
+  setStraight( 31.0f, 0.0f, 600.0f, 600.0f, 600.0f );
   waitStraight();
 }
 
@@ -132,14 +134,14 @@ void slaromCenterRight( float accel )
 {
   sidewall_control_flag = 1;    // 壁制御有効
   while( sen_r.now > sen_r.threshold );
-  translation_ideal.distance = 8.0f;
+  translation_ideal.distance = 7.8f;
   sidewall_control_flag = 1;
-  setStraight( 29.0f, accel, 500.0f, 500.0f, 500.0f );
+  setStraight( 23.0f, accel, 600.0f, 600.0f, 600.0f );
   waitStraight();
-  setRotation( -90.0f, 10000.0f, 700.0f, 500.0f );
+  setRotation( -90.0f, 14000.0f, 700.0f, 600.0f );
   waitRotation();
-  sidewall_control_flag = 1;    // 壁制御有効
-  setStraight( 35.0f, 0.0f, 500.0f, 500.0f, 500.0f );
+  sidewall_control_flag = 1;
+  setStraight( 31.0f, 0.0f, 600.0f, 600.0f, 600.0f );
   waitStraight();
 }
 
@@ -148,13 +150,13 @@ void slaromCenterLeft180( float accel )
 {
   sidewall_control_flag = 1;    // 壁制御有効
   while( sen_l.now > sen_l.threshold );
-  translation_ideal.distance = 7.5f;
-  setStraight( 30.0f, accel, 500.0f, 500.0f, 500.0f );
+  translation_ideal.distance = 7.2f;
+  setStraight( 25.0f, accel, 600.0f, 600.0f, 600.0f );
   waitStraight();
-  setRotation( 180.0f, 12000.0f, 650.0f, 500.0f );
+  setRotation( 180.0f, 12000.0f, 800.0f, 600.0f );
   waitRotation();
-  sidewall_control_flag = 1;    // 壁制御有効
-  setStraight( 34.0f, 0.0f, 500.0f, 500.0f, 500.0f );
+  sidewall_control_flag = 1;
+  setStraight( 30.0f, 0.0f, 600.0f, 600.0f, 600.0f );
   waitStraight();
 }
 
@@ -162,13 +164,13 @@ void slaromCenterRight180( float accel )
 {
   sidewall_control_flag = 1;    // 壁制御有効
   while( sen_r.now > sen_r.threshold );
-  translation_ideal.distance = 8.0f;
-  setStraight( 30.0f, accel, 500.0f, 500.0f, 500.0f );
+  translation_ideal.distance = 7.8f;
+  setStraight( 25.0f, accel, 600.0f, 600.0f, 600.0f );
   waitStraight();
-  setRotation( -180.0f, 12000.0f, 650.0f, 500.0f );
+  setRotation( -180.0f, 12000.0f, 800.0f, 600.0f );
   waitRotation();
-  sidewall_control_flag = 1;    // 壁制御有効
-  setStraight( 34.0f, 0.0f, 500.0f, 500.0f, 500.0f );
+  sidewall_control_flag = 1;
+  setStraight( 30.0f, 0.0f, 600.0f, 600.0f, 600.0f );
   waitStraight();
 }
 
@@ -177,13 +179,17 @@ void slaromCenterLeft45( float accel )
 {
   sidewall_control_flag = 1;    // 壁制御有効
   while( sen_l.now > sen_l.threshold );
-  translation_ideal.distance = 7.5f;
-  setStraight( 15.5f, accel, 500.0f, 500.0f, 500.0f );
+  translation_ideal.distance = 7.2f;
+  setStraight( 11.0f, accel, 600.0f, 600.0f, 600.0f );
   waitStraight();
-  setRotation( 45.0f, 16000.0f, 750.0f, 500.0f );
+  setRotation( 45.0f, 18000.0f, 800.0f, 600.0f );
   waitRotation();
   dirwall_control_flag = 1;
-  setStraight( 38.0f, 0.0f, 500.0f, 500.0f, 500.0f );
+  if ( motion_queue[motion_last+1] == DIA_LEFT_TURN || motion_queue[motion_last+1] == DIA_RIGHT_TURN ){
+    setStraight( 34.0f, 8000.0f, 600.0f, 600.0f, 500.0f );
+  } else {
+    setStraight( 34.0f, 0.0f, 600.0f, 600.0f, 600.0f );
+  }
   waitStraight();
 }
 
@@ -191,13 +197,17 @@ void slaromCenterRight45( float accel )
 {
   sidewall_control_flag = 1;    // 壁制御有効
   while( sen_r.now > sen_r.threshold );
-  translation_ideal.distance = 8.0f;
-  setStraight( 15.5f, accel, 500.0f, 500.0f, 500.0f );
+  translation_ideal.distance = 7.8f;
+  setStraight( 11.0f, accel, 600.0f, 600.0f, 600.0f );
   waitStraight();
-  setRotation( -45.0f, 16000.0f, 750.0f, 500.0f );
+  setRotation( -45.0f, 18000.0f, 800.0f, 600.0f );
   waitRotation();
   dirwall_control_flag = 1;
-  setStraight( 38.0f, 0.0f, 500.0f, 500.0f, 500.0f );
+  if ( motion_queue[motion_last+1] == DIA_LEFT_TURN || motion_queue[motion_last+1] == DIA_RIGHT_TURN ){
+    setStraight( 34.0f, 8000.0f, 600.0f, 600.0f, 500.0f );
+  } else {
+    setStraight( 34.0f, 0.0f, 600.0f, 600.0f, 600.0f );
+  }
   waitStraight();
 }
 
@@ -206,13 +216,17 @@ void slaromCenterLeft135( float accel )
 {
   sidewall_control_flag = 1;    // 壁制御有効
   while( sen_l.now > sen_l.threshold );
-  translation_ideal.distance = 7.5f;
-  setStraight( 33.0f, accel, 500.0f, 500.0f, 500.0f );
+  translation_ideal.distance = 7.2f;
+  setStraight( 15.0f, accel, 600.0f, 600.0f, 600.0f );
   waitStraight();
-  setRotation( 135.0f, 16000.0f, 800.0f, 500.0f );
+  setRotation( 135.0f, 20000.0f, 800.0f, 600.0f );
   waitRotation();
   dirwall_control_flag = 1;
-  setStraight( 31.0f, 0.0f, 500.0f, 500.0f, 500.0f );
+  if ( motion_queue[motion_last+1] == DIA_LEFT_TURN || motion_queue[motion_last+1] == DIA_RIGHT_TURN ){
+    setStraight( 14.0f, 8000.0f, 600.0f, 600.0f, 500.0f );
+  } else {
+    setStraight( 14.0f, 0.0f, 600.0f, 600.0f, 600.0f );
+  }
   waitStraight();
 }
 
@@ -220,13 +234,17 @@ void slaromCenterRight135( float accel )
 {
   sidewall_control_flag = 1;    // 壁制御有効
   while( sen_r.now > sen_r.threshold );
-  translation_ideal.distance = 8.0f;
-  setStraight( 33.0f, accel, 500.0f, 500.0f, 500.0f );
+  translation_ideal.distance = 7.8f;
+  setStraight( 15.0f, accel, 600.0f, 600.0f, 600.0f );
   waitStraight();
-  setRotation( -135.0f, 16000.0f, 800.0f, 500.0f );
+  setRotation( -135.0f, 20000.0f, 800.0f, 600.0f );
   waitRotation();
   dirwall_control_flag = 1;
-  setStraight( 31.0f, 0.0f, 500.0f, 500.0f, 500.0f );
+  if ( motion_queue[motion_last+1] == DIA_LEFT_TURN || motion_queue[motion_last+1] == DIA_RIGHT_TURN ){
+    setStraight( 14.0f, 8000.0f, 600.0f, 600.0f, 500.0f );
+  } else {
+    setStraight( 14.0f, 0.0f, 600.0f, 600.0f, 600.0f );
+  }
   waitStraight();
 }
 
@@ -238,13 +256,17 @@ void slaromLeftV90( void )
   if ( translation_ideal.distance < 10.0f ){
     translation_ideal.distance = 2.0f;
   }
-  
+        
   setStraight( 13.0f, 0.0f, 500.0f, 500.0f, 500.0f );
   waitStraight();
   setRotation( 90.0f, 16000.0f, 800.0f, 500.0f );
   waitRotation();
   dirwall_control_flag = 1;
-  setStraight( 19.0f, 0.0f, 500.0f, 500.0f, 500.0f );
+  if ( motion_queue[motion_last+1] == DIA_LEFT_TURN || motion_queue[motion_last+1] == DIA_RIGHT_TURN ){
+    setStraight( 19.0f, 0.0f, 500.0f, 500.0f, 500.0f );
+  } else {
+    setStraight( 19.0f, 8000.0f, 600.0f, 500.0f, 600.0f );
+  }
   waitStraight();  
 }
 
@@ -260,7 +282,11 @@ void slaromRightV90( void )
   setRotation( -90.0f, 16000.0f, 800.0f, 500.0f );
   waitRotation();
   dirwall_control_flag = 1;
-  setStraight( 19.0f, 0.0f, 500.0f, 500.0f, 500.0f );
+  if ( motion_queue[motion_last+1] == DIA_LEFT_TURN || motion_queue[motion_last+1] == DIA_RIGHT_TURN ){
+    setStraight( 19.0f, 0.0f, 500.0f, 500.0f, 500.0f );
+  } else {
+    setStraight( 19.0f, 8000.0f, 600.0f, 500.0f, 600.0f );
+  }
   waitStraight();  
 }
 
@@ -270,15 +296,15 @@ void slaromReturnDiaLeft45( void )
   dirwall_control_flag = 1;
   while( sen_l.now > sen_l.threshold && translation_ideal.distance < 15.0f );
   if ( translation_ideal.distance < 15.0f ){
-    translation_ideal.distance = 2.0f;
+    translation_ideal.distance = 1.8f;
   }
-  setStraight( 34.0f, 8000.0f, 500.0f, 500.0f, 500.0f );
+  setStraight( 29.0f, 0.0f, 600.0f, 600.0f, 600.0f );
   waitStraight();
-  setRotation( 45.0f, 16000.0f, 800.0f, 500.0f );
+  setRotation( 45.0f, 18000.0f, 800.0f, 600.0f );
   waitRotation();
-  sidewall_control_flag = 1;    // 壁制御有効
-  setStraight( 19.0f, 0.0f, 500.0f, 500.0f, 500.0f );
-  waitStraight();
+  sidewall_control_flag = 1;
+  setStraight( 15.0f, 0.0f, 600.0f, 600.0f, 600.0f );
+  waitStraight();  
 }
 
 void slaromReturnDiaRight45( void )
@@ -286,47 +312,47 @@ void slaromReturnDiaRight45( void )
   dirwall_control_flag = 1;
   while( sen_r.now > sen_r.threshold && translation_ideal.distance < 15.0f );
   if ( translation_ideal.distance < 15.0f ){
-    translation_ideal.distance = 3.0f;
+    translation_ideal.distance = 2.4f;
   }
-  setStraight( 34.0f, 8000.0f, 500.0f, 500.0f, 500.0f );
+  setStraight( 29.0f, 0.0f, 600.0f, 600.0f, 600.0f );
   waitStraight();
-  setRotation( -45.0f, 16000.0f, 800.0f, 500.0f );
+  setRotation( -45.0f, 18000.0f, 800.0f, 600.0f );
   waitRotation();
-  sidewall_control_flag = 1;    // 壁制御有効
-  setStraight( 19.0f, 0.0f, 500.0f, 500.0f, 500.0f );
-  waitStraight();
+  sidewall_control_flag = 1;
+  setStraight( 15.0f, 0.0f, 600.0f, 600.0f, 600.0f );
+  waitStraight();  
 }
 
 // 斜めから135度ターン復帰
 void slaromReturnDiaLeft135( void )
 {
   dirwall_control_flag = 1;
-  while( sen_l.now > sen_l.threshold && translation_ideal.distance < 15.0f );
-  if ( translation_ideal.distance < 15.0f ){
-    translation_ideal.distance = 2.0f;
+  while( sen_l.now > sen_l.threshold && translation_ideal.distance < 10.0f );
+  if ( translation_ideal.distance < 10.0f ){
+    translation_ideal.distance = 1.8f;
   }
-  setStraight( 25.0f, 8000.0f, 500.0f, 500.0f, 500.0f );
+  setStraight( 7.0f, 0.0f, 600.0f, 600.0f, 600.0f );
   waitStraight();
-  setRotation( 135.0f, 16000.0f, 800.0f, 500.0f );
+  setRotation( 135.0f, 18000.0f, 800.0f, 600.0f );
   waitRotation();
-  sidewall_control_flag = 1;    // 壁制御有効
-  setStraight( 38.0f, 0.0f, 500.0f, 500.0f, 500.0f );
-  waitStraight();
+  sidewall_control_flag = 1;
+  setStraight( 22.0f, 0.0f, 600.0f, 600.0f, 600.0f );
+  waitStraight();  
 }
 
 void slaromReturnDiaRight135( void )
 {
   dirwall_control_flag = 1;
-  while( sen_r.now > sen_r.threshold && translation_ideal.distance < 15.0f );
-  if ( translation_ideal.distance < 15.0f ){
-    translation_ideal.distance = 3.0f;
+  while( sen_r.now > sen_r.threshold && translation_ideal.distance < 10.0f );
+  if ( translation_ideal.distance < 10.0f ){
+    translation_ideal.distance = 2.4f;
   }
   
-  setStraight( 25.0f, 8000.0f, 500.0f, 500.0f, 500.0f );
+  setStraight( 7.0f, 0.0f, 600.0f, 600.0f, 600.0f );
   waitStraight();
-  setRotation( -135.0f, 16000.0f, 800.0f, 500.0f );
+  setRotation( -135.0f, 18000.0f, 800.0f, 600.0f );
   waitRotation();
-  sidewall_control_flag = 1;    // 壁制御有効
-  setStraight( 38.0f, 0.0f, 500.0f, 500.0f, 500.0f );
-  waitStraight();
+  sidewall_control_flag = 1;
+  setStraight( 22.0f, 0.0f, 600.0f, 600.0f, 600.0f );
+  waitStraight();  
 }

@@ -221,7 +221,7 @@ void mode2( void )
     if ( mode_distance > 30.0f ){
       mode_distance = 0.0f;
       counter++;
-      if( counter > 4 ) counter = 0;
+      if( counter > 6 ) counter = 0;
       buzzermodeSelect( counter );
       waitMotion( 200 );
       certainLedOut( counter );
@@ -230,7 +230,7 @@ void mode2( void )
     if ( mode_distance < -30.0f ){
       mode_distance = 0.0f;
       counter--;
-      if( counter < 0 ) counter = 4;
+      if( counter < 0 ) counter = 5;
       buzzermodeSelect( counter );      
       waitMotion( 200 );
       certainLedOut( counter );
@@ -244,16 +244,21 @@ void mode2( void )
   }
   
 
-  if ( mode_counter < 2 ){
+  if ( counter < 2 ){
     speed_count = PARAM_400;
     setNormalRunParam( &run_param, 8000.0f, 400.0f );       // 加速度、速度指定
     setNormalRunParam( &rotation_param, 6300.0f, 450.0f );  // 角加速度、角速度指定
     setPIDGain( &translation_gain, 1.4f, 40.0f, 0.0f );   
-  } else {
+  } else if ( counter < 4 ){
     speed_count = PARAM_500;
-    setNormalRunParam( &run_param, 10000.0f, 500.0f );       // 加速度、速度指定
+    setNormalRunParam( &run_param, 8000.0f, 500.0f );       // 加速度、速度指定
     setNormalRunParam( &rotation_param, 6300.0f, 450.0f );  // 角加速度、角速度指定
     setPIDGain( &translation_gain, 1.6f, 45.0f, 0.0f );   
+  } else {
+    speed_count = PARAM_600;
+    setNormalRunParam( &run_param, 8000.0f, 500.0f );       // 加速度、速度指定
+    setNormalRunParam( &rotation_param, 6300.0f, 450.0f );  // 角加速度、角速度指定
+    setPIDGain( &translation_gain, 1.7f, 50.0f, 0.0f );   
   }
   
 
@@ -263,10 +268,12 @@ void mode2( void )
 
   startAction();
 
-  if ( speed_count < 2 ){
+  if ( speed_count == PARAM_400 ){
     adachiFastRunDiagonal400( &run_param, &rotation_param );
-  } else {
+  } else if ( speed_count == PARAM_500 ){
     adachiFastRunDiagonal500( &run_param, &rotation_param );
+  } else {
+    adachiFastRunDiagonal600( &run_param, &rotation_param );
   }
   
   
@@ -401,10 +408,13 @@ void mode7( void )
   setNormalRunParam( &rotation_param, 6300.0f, 450.0f );  // 角加速度、角速度指定
   setPIDGain( &translation_gain, 1.6f, 45.0f, 0.0f );  
   
-  setStraight( 105.0f, 10000.0f, 500.0f, 0.0f, 500.0f );
+  sidewall_control_flag = 1;    // 壁制御有効
+  setStraight( 105.0f, 10000.0f, 600.0f, 0.0f, 500.0f );
   waitStraight();
 
-  setStraight( 90.0f, 10000.0f, 500.0f, 500.0f, 0.0f );
+
+
+  setStraight( 90.0f, 10000.0f, 600.0f, 600.0f, 0.0f );
   waitStraight();
 
 
