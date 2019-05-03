@@ -149,7 +149,7 @@ void adachiSearchRunKnown( int8_t gx, int8_t gy, t_normal_param *translation, t_
   addWall( pos, wall );
   addWall( pos, bit ); 
   straightHalfBlockStop( translation->accel, translation->velocity );
-  if ( mypos.x == gx && mypos.y == gy ){
+  if ( mypos.x == gx && mypos.y == gy && sen_fl.is_wall == 1 ){
     pivoTurn180( rotation->accel, rotation->velocity );
     adjBack();
     mypos.direction = (mypos.direction + 2) % 4;
