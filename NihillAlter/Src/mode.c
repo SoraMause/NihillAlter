@@ -24,8 +24,8 @@
 #include "mazeRun.h"
 
 // ゴール座標の設定
-static uint8_t goal_x = 7;
-static uint8_t goal_y = 7;
+static uint8_t goal_x = 1;
+static uint8_t goal_y = 0;
 static uint8_t maze_goal_size = 1;
 
 void modeSelect( int8_t mode )
@@ -102,14 +102,16 @@ void mode_init( void )
   setSlaromOffset( &slarom300, 8.0f, 8.5f, 8.0f, 8.5f, 9000.0f, 720.0f );
 
   setPIDGain( &translation_gain, 0.8f, 30.0f, 0.0f );  
-  setPIDGain( &rotation_gain, 0.9f, 60.0f, 0.0f ); 
+  setPIDGain( &rotation_gain, 0.9f, 60.0f, 0.25f ); 
   setPIDGain( &sensor_gain, 0.2f, 0.0f, 0.0f );
 
   // sensor 値設定
-  setSensorConstant( &sen_front, 500, 100 );
+  setSensorConstant( &sen_front, 500, 105 );
   // 区画中心　前壁 195
-  setSensorConstant( &sen_l, 215, 100 );
-  setSensorConstant( &sen_r, 195, 100 );
+  setSensorConstant( &sen_l, 215, 105 );
+  setSensorConstant( &sen_r, 195, 105 );
+
+  setSenDiff( 3 );
 
   certainLedOut( 0x03 );
   waitMotion( 100 );
@@ -246,7 +248,7 @@ void mode2( void )
 
   if ( counter < 2 ){
     speed_count = PARAM_400;
-    setNormalRunParam( &run_param, 8000.0f, 400.0f );       // 加速度、速度指定
+    setNormalRunParam( &run_param, 6000.0f, 400.0f );       // 加速度、速度指定
     setNormalRunParam( &rotation_param, 6300.0f, 450.0f );  // 角加速度、角速度指定
     setPIDGain( &translation_gain, 1.4f, 40.0f, 0.0f );   
   } else if ( counter < 4 ){
@@ -254,11 +256,13 @@ void mode2( void )
     setNormalRunParam( &run_param, 8000.0f, 500.0f );       // 加速度、速度指定
     setNormalRunParam( &rotation_param, 6300.0f, 450.0f );  // 角加速度、角速度指定
     setPIDGain( &translation_gain, 1.6f, 45.0f, 0.0f );   
+    setSenDiff( 6 );
   } else {
     speed_count = PARAM_600;
     setNormalRunParam( &run_param, 8000.0f, 500.0f );       // 加速度、速度指定
     setNormalRunParam( &rotation_param, 6300.0f, 450.0f );  // 角加速度、角速度指定
     setPIDGain( &translation_gain, 1.7f, 50.0f, 0.0f );   
+    setSenDiff( 10 );
   }
   
 
@@ -409,14 +413,8 @@ void mode7( void )
   setPIDGain( &translation_gain, 1.6f, 45.0f, 0.0f );  
   
   sidewall_control_flag = 1;    // 壁制御有効
-  setStraight( 105.0f, 10000.0f, 600.0f, 0.0f, 500.0f );
+  setStraight( 540.0f, 8000.0f, 2000.0f, 0.0f, 0.0f );
   waitStraight();
-
-
-
-  setStraight( 90.0f, 10000.0f, 600.0f, 600.0f, 0.0f );
-  waitStraight();
-
 
   setLogFlag( 0 );
   waitMotion( 300 );
@@ -424,6 +422,7 @@ void mode7( void )
 
   while( getPushsw() == 0 );
   showLog();
+  waitMotion(1000); 
   
 }
 

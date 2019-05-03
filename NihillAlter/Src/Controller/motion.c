@@ -42,7 +42,7 @@ void straightOneBlock( float run_vel )
   wall_out_flag = 2;          // 壁切れを読むことを許可
   sidewall_control_flag = 1;  // 壁制御有効
   setStraight( ONE_BLOCK_DISTANCE, 0.0f, run_vel, run_vel, run_vel );
-  waitStraight();
+  waitSearchStraight();
 }
 
 void straightHalfBlockStop( float accel , float run_vel )

@@ -152,11 +152,11 @@ void waitSearchStraight( void )
 {
   while( translation_trape_param.run_flag == 1 ){
     // 動作終了までメインは動作を待機状態にする
-    if ( sen_front.now > 135 ) break;
+    if ( sen_front.now > 130 ) break;
   }
 
   if ( sen_front.is_wall == 1 ){
-    while( sen_front.now < 125 );
+    while( sen_front.now < 130 );
   }
 
   // reset ideal data
@@ -185,11 +185,12 @@ void waitSlaromOut( void )
 {
   while( translation_trape_param.run_flag == 1 ){
     // 動作終了までメインは動作を待機状態にする
+    if ( sen_front.now > 130 ) break;
   }
 
 
   if ( sen_front.is_wall == 1 ){
-    while( sen_front.now < 125 );
+    while( sen_front.now < 130 );
   }
 
   // reset ideal data
